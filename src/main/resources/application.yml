@@ -1,0 +1,93 @@
+spring:
+  application:
+    name: crm-system
+
+  # Database Configuration
+  datasource:
+    url: jdbc:mysql://localhost:3306/crm_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+  # SQL Initialization
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          oauth2-server:
+            client-id: crm-client
+            client-secret: crm-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/oauth2-server
+            scope: openid,profile,email
+        provider:
+          oauth2-server:
+            authorization-uri: http://localhost:8081/oauth/authorize
+            token-uri: http://localhost:8081/oauth/token
+            user-info-uri: http://localhost:8081/userinfo
+            user-name-attribute: sub
+
+  # Thymeleaf Configuration
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false
+
+  # Static Resources
+  web:
+    resources:
+      static-locations: classpath:/static/,classpath:/public/
+
+# Server Configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.crm: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# Application Configuration
+app:
+  security:
+    oauth2:
+      enabled: true
+      login-success-url: /
+      logout-success-url: /login
