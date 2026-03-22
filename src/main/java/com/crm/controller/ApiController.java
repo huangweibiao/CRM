@@ -3,15 +3,13 @@ package com.crm.controller;
 import com.crm.dto.ApiResponse;
 import com.crm.entity.Customer;
 import com.crm.repository.CustomerRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * API Controller
@@ -19,13 +17,17 @@ import java.util.List;
  *
  * @author CRM Team
  */
-@Slf4j
 @RestController
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class ApiController {
 
+    private static final Logger log = LoggerFactory.getLogger(ApiController.class);
+
     private final CustomerRepository customerRepository;
+
+    public ApiController(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     @GetMapping("/customers")
     public ApiResponse<Page<Customer>> getCustomers(
@@ -58,7 +60,7 @@ public class ApiController {
 
     @PostMapping("/customers")
     public ApiResponse<Customer> createCustomer(@RequestBody Customer customer) {
-        log.info("API: Creating customer: {}", customer.getName());
+        log.info("API: Creating customer: {}", customer.getCustomerName());
 
         Customer savedCustomer = customerRepository.save(customer);
         return ApiResponse.success("Customer created successfully", savedCustomer);
@@ -70,16 +72,15 @@ public class ApiController {
 
         return customerRepository.findById(id)
                 .map(existingCustomer -> {
-                    existingCustomer.setName(customer.getName());
+                    existingCustomer.setCustomerName(customer.getCustomerName());
                     existingCustomer.setCompanyName(customer.getCompanyName());
                     existingCustomer.setEmail(customer.getEmail());
                     existingCustomer.setPhone(customer.getPhone());
                     existingCustomer.setAddress(customer.getAddress());
                     existingCustomer.setIndustry(customer.getIndustry());
                     existingCustomer.setStatus(customer.getStatus());
-                    existingCustomer.setNotes(customer.getNotes());
-                    existingCustomer.setAssignedUserId(customer.getAssignedUserId());
-                    existingCustomer.setRevenue(customer.getRevenue());
+                    existingCustomer.setRemark(customer.getRemark());
+                    existingCustomer.setOwnerUserId(customer.getOwnerUserId());
 
                     Customer updatedCustomer = customerRepository.save(existingCustomer);
                     return ApiResponse.success("Customer updated successfully", updatedCustomer);
@@ -107,7 +108,7 @@ public class ApiController {
         long activeCustomers = customerRepository.findByStatus("ACTIVE").size();
 
         var stats = new Object() {
-            public final long totalCustomers = CustomerController.this.customerRepository.count();
+            public final long totalCustomers = customerRepository.count();
             public final long activeCustomers = customerRepository.findByStatus("ACTIVE").size();
         };
 

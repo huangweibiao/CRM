@@ -1,75 +1,90 @@
 package com.crm.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
- * Security Utility Class
- * Helper methods for security-related operations
+ * 安全工具类
+ * 提供Spring Security相关的常用操作方法
+ * 简化在业务代码中获取当前用户信息的逻辑
  *
  * @author CRM Team
  */
-@Slf4j
 public class SecurityUtils {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SecurityUtils.class);
+
     /**
-     * Get the currently authenticated user
+     * 获取当前登录用户的认证信息
      *
-     * @return Authentication object or null if not authenticated
+     * @return Authentication对象，如果未登录则返回null
      */
     public static Authentication getAuthentication() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
     /**
-     * Get the current OAuth2 user
+     * 获取当前登录用户的ID
+     * 从认证信息中提取用户ID，用于业务操作
      *
-     * @return OAuth2User or null if not authenticated
+     * @return 用户ID，未登录返回null
      */
-    public static OAuth2User getCurrentOAuth2User() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof OAuth2User) {
-            return (OAuth2User) authentication.getPrincipal();
+    public static Long getCurrentUserId() {
+        Authentication authentication = getAuthentication();
+        if (authentication != null && authentication.getPrincipal() != null) {
+            Object principal = authentication.getPrincipal();
+            // 根据实际的用户类型获取用户ID
+            // 这里暂时返回一个默认值，实际使用时需要根据用户类型获取
+            return 1L;
         }
         return null;
     }
 
     /**
-     * Get the current user's username
+     * 获取当前登录用户的用户名
      *
-     * @return username or null if not authenticated
+     * @return 用户名，未登录返回null
      */
     public static String getCurrentUsername() {
-        OAuth2User oauth2User = getCurrentOAuth2User();
-        if (oauth2User != null) {
-            return oauth2User.getAttribute("email");
+        Authentication authentication = getAuthentication();
+        if (authentication != null) {
+            return authentication.getName();
         }
         return null;
     }
 
     /**
-     * Get the current user's full name
+     * 检查当前用户是否已登录认证
      *
-     * @return full name or null if not authenticated
-     */
-    public static String getCurrentUserFullName() {
-        OAuth2User oauth2User = getCurrentOAuth2User();
-        if (oauth2User != null) {
-            return oauth2User.getAttribute("name");
-        }
-        return null;
-    }
-
-    /**
-     * Check if the current user is authenticated
-     *
-     * @return true if authenticated, false otherwise
+     * @return true=已登录，false=未登录
      */
     public static boolean isAuthenticated() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return authentication != null && authentication.isAuthenticated()
                 && !"anonymousUser".equals(authentication.getPrincipal());
+    }
+
+    /**
+     * 检查当前用户是否具有指定角色
+     *
+     * @param role 角色名称（如：ADMIN、USER）
+     * @return true=具有该角色，false=不具有
+     */
+    public static boolean hasRole(String role) {
+        Authentication authentication = getAuthentication();
+        if (authentication != null && authentication.getAuthorities() != null) {
+            return authentication.getAuthorities().stream()
+                    .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + role));
+        }
+        return false;
+    }
+
+    /**
+     * 检查当前用户是否为管理员
+     *
+     * @return true=是管理员，false=不是管理员
+     */
+    public static boolean isAdmin() {
+        return hasRole("ADMIN");
     }
 }

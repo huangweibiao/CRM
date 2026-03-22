@@ -40,7 +40,31 @@
             color: #666;
             margin-bottom: 30px;
         }
-        .oauth-btn {
+        .login-form {
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .login-btn {
             background: #667eea;
             color: white;
             padding: 12px 30px;
@@ -48,11 +72,10 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
+            width: 100%;
             transition: background 0.3s;
         }
-        .oauth-btn:hover {
+        .login-btn:hover {
             background: #5568d3;
         }
         .error-message {
@@ -62,20 +85,40 @@
             border-radius: 5px;
             background: #ffeaea;
         }
+        .divider {
+            margin: 20px 0;
+            border-top: 1px solid #eee;
+        }
+        .form-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="logo">🚀</div>
         <h1>CRM System</h1>
-        <p>Customer Relationship Management</p>
+        <p>客户关系管理系统</p>
 
-        <a href="/oauth2/authorization/oauth2-server" class="oauth-btn">
-            Sign in with OAuth2
-        </a>
+        <form class="login-form" th:action="@{/login}" method="post">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
+            </div>
+            <button type="submit" class="login-btn">登录</button>
+        </form>
+
+        <div class="divider"></div>
+        <p class="form-hint">默认账号：admin / admin</p>
 
         <div th:if="${param.error}" class="error-message">
-            Login failed. Please try again.
+            用户名或密码错误，请重试
         </div>
     </div>
 </body>

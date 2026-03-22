@@ -33,24 +33,6 @@ spring:
       schema-locations: classpath:schema.sql
       data-locations: classpath:data.sql
 
-  # OAuth2 Configuration
-  security:
-    oauth2:
-      client:
-        registration:
-          oauth2-server:
-            client-id: crm-client
-            client-secret: crm-secret
-            authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/oauth2-server
-            scope: openid,profile,email
-        provider:
-          oauth2-server:
-            authorization-uri: http://localhost:8081/oauth/authorize
-            token-uri: http://localhost:8081/oauth/token
-            user-info-uri: http://localhost:8081/userinfo
-            user-name-attribute: sub
-
   # Thymeleaf Configuration
   thymeleaf:
     prefix: classpath:/templates/
@@ -85,9 +67,4 @@ logging:
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 # Application Configuration
-app:
-  security:
-    oauth2:
-      enabled: true
-      login-success-url: /
-      logout-success-url: /login
+# OAuth2 has been removed, only core CRM business functionality remains

@@ -3,8 +3,8 @@ package com.crm.controller;
 import com.crm.entity.Contact;
 import com.crm.repository.ContactRepository;
 import com.crm.repository.CustomerRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,14 +21,19 @@ import java.util.List;
  *
  * @author CRM Team
  */
-@Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/contacts")
 public class ContactController {
 
+    private static final Logger log = LoggerFactory.getLogger(ContactController.class);
+
     private final ContactRepository contactRepository;
     private final CustomerRepository customerRepository;
+
+    public ContactController(ContactRepository contactRepository, CustomerRepository customerRepository) {
+        this.contactRepository = contactRepository;
+        this.customerRepository = customerRepository;
+    }
 
     @GetMapping
     public String listContacts(

@@ -1,23 +1,16 @@
 package com.crm.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 /**
- * Deal Entity
- * Represents business deals/opportunities
+ * 交易实体类
+ * 对应数据库表 deals
+ * 表示业务交易/商机
  *
  * @author CRM Team
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "deals")
 public class Deal extends BaseEntity {
@@ -61,4 +54,110 @@ public class Deal extends BaseEntity {
 
     @Column(name = "priority", length = 20)
     private String priority = "MEDIUM";
+
+    // Getter and Setter methods
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getStage() {
+        return stage;
+    }
+
+    public void setStage(String stage) {
+        this.stage = stage;
+    }
+
+    public Integer getProbability() {
+        return probability;
+    }
+
+    public void setProbability(Integer probability) {
+        this.probability = probability;
+    }
+
+    public LocalDate getExpectedCloseDate() {
+        return expectedCloseDate;
+    }
+
+    public void setExpectedCloseDate(LocalDate expectedCloseDate) {
+        this.expectedCloseDate = expectedCloseDate;
+    }
+
+    public LocalDate getActualCloseDate() {
+        return actualCloseDate;
+    }
+
+    public void setActualCloseDate(LocalDate actualCloseDate) {
+        this.actualCloseDate = actualCloseDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Long getAssignedUserId() {
+        return assignedUserId;
+    }
+
+    public void setAssignedUserId(Long assignedUserId) {
+        this.assignedUserId = assignedUserId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
 }
